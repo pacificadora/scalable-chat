@@ -5,7 +5,25 @@ class SocketService {
 
     constructor() {
         console.log("init SocketService constructor");
-        this.io = new Server();
+        this.io = new Server(
+            {
+                cors: {
+                    allowedHeaders: ["*"],
+                    origin: "*",
+                }
+            }
+        );
+    }
+
+    public initListeners() {
+        console.log("initialize scoket listeners");
+
+        this.io.on("connect", (socket) => {
+            console.log("a user connected", socket.id);
+            socket.on('event', async ({ message }: { message: string }) => {
+                console.log(message);
+            });
+        });
     }
 
     getIo() {

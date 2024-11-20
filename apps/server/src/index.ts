@@ -10,6 +10,8 @@ async function init() {
     const io = socketService.getIo();
     io.attach(server);
 
+    socketService.initListeners();
+
     server.listen(port, () => {
         console.log(`Server is running on port: ${port}`);
     });
