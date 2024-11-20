@@ -1,11 +1,13 @@
 import { Server } from 'socket.io'
 import Redis from 'ioredis'
+import dotenv from 'dotenv';
 
+dotenv.config();
 const pubClient = new Redis({
-    host: process.env.REDIS_HOST,
-    port: Number(process.env.REDIS_PORT),
-    username: process.env.REDIS_USERNAME,
-    password: process.env.password,
+    host: process.env.REDIS_HOST || '',
+    port: Number(process.env.REDIS_PORT) || 6379,
+    username: process.env.REDIS_USERNAME || 'default',
+    password: process.env.REDIS_PASSWORD || '',
 });
 const subClient = pubClient.duplicate();
 
