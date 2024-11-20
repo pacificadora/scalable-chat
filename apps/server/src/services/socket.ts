@@ -20,8 +20,8 @@ class SocketService {
 
         this.io.on("connect", (socket) => {
             console.log("a user connected", socket.id);
-            socket.on('event', async ({ message }: { message: string }) => {
-                console.log(message);
+            socket.on('event:message', async ({ message }: { message: string }) => {
+                console.log('message from client: ', message);
             });
         });
     }
