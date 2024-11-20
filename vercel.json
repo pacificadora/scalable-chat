@@ -4,5 +4,5 @@
     "devCommand": "turbo dev",
     "installCommand": "yarn install",
     "framework": "nextjs",
-    "outputDirectory": "apps/web/.next"
+    "outputDirectory": ".next"
 }
