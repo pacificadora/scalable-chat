@@ -1,4 +1,13 @@
 import { Server } from 'socket.io'
+import Redis from 'ioredis'
+
+const pubClient = new Redis({
+    host: process.env.REDIS_HOST,
+    port: Number(process.env.REDIS_PORT),
+    username: process.env.REDIS_USERNAME,
+    password: process.env.REDIS_PASSWORD,
+});
+const subClient = pubClient.duplicate();
 
 class SocketService {
     private io: Server;
@@ -13,6 +22,7 @@ class SocketService {
                 }
             }
         );
+        subClient.subscribe('MessageChannel');
     }
 
     public initListeners() {
@@ -22,7 +32,15 @@ class SocketService {
             console.log("a user connected", socket.id);
             socket.on('event:message', async ({ message }: { message: string }) => {
                 console.log('message from client: ', message);
+                //publish message to my valkey.
+                await pubClient.publish('MessageChannel', JSON.stringify({ message }));
             });
+        });
+
+        subClient.on('message', (channel, message) => {
+            if (channel === 'MessageChannel') {
+                this.io.emit('message', JSON.parse(message));
+            }
         });
     }
 
