@@ -38,7 +38,9 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
     }, []);
 
     useEffect(() => {
-        const socket = io('http://localhost:8000');
+        const socket = io('https://scalable-chat-1.onrender.com', {
+            transports: ['websocket'],
+        });
         socket.on('message', onMessageRecieved);
         setSocket(socket);
         return () => {
