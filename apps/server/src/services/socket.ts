@@ -1,11 +1,12 @@
 import { Server } from 'socket.io'
 import Redis from 'ioredis'
+import dotenv from 'dotenv';
 
 const pubClient = new Redis({
     host: process.env.REDIS_HOST,
     port: Number(process.env.REDIS_PORT),
     username: process.env.REDIS_USERNAME,
-    password: process.env.REDIS_PASSWORD,
+    password: process.env.password,
 });
 const subClient = pubClient.duplicate();
 
@@ -37,9 +38,11 @@ class SocketService {
             });
         });
 
+        //jb bhi mere subscriber ke paas redis se koi message aayega to ye function call hoga.
         subClient.on('message', (channel, message) => {
             if (channel === 'MessageChannel') {
-                this.io.emit('message', JSON.parse(message));
+                console.log("message recieved from redis", message);
+                this.io.emit('message', message);
             }
         });
     }
